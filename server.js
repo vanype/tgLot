@@ -101,32 +101,45 @@ app.post("/add-contest", (req, res) => {
     return res.status(400).json({ error: "Все поля обязательны для заполнения" });
   }
 
-  // Создание нового конкурса
-  const newContest = {
-    author_id: author_id,
-    prize: prize,
-    description: description,
-    start_date: start_date,
-    end_date: end_date
-  };
-
-  // Вставка нового конкурса в таблицу
-  pool.query("INSERT INTO contests SET ?", newContest, (err, result) => {
+  // Проверяем, существует ли пользователь с таким author_id
+  pool.query("SELECT * FROM users WHERE user_id = ?", [author_id], (err, results) => {
     if (err) {
-      console.error("Ошибка добавления конкурса:", err.message);
+      console.error("Ошибка выполнения запроса:", err.message);
       return res.status(500).json({ error: "Ошибка сервера" });
     }
 
-    // Отправляем успешный ответ с данными нового конкурса
-    return res.status(201).json({
-      message: "Конкурс успешно добавлен",
-      contest: {
-        contest_id: result.insertId,
-        ...newContest,
-      },
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Пользователь с таким ID не найден" });
+    }
+
+    // Создание нового конкурса
+    const newContest = {
+      author_id: author_id,
+      prize: prize,
+      description: description,
+      start_date: start_date,
+      end_date: end_date,
+    };
+
+    // Вставка нового конкурса в таблицу
+    pool.query("INSERT INTO contests SET ?", newContest, (err, result) => {
+      if (err) {
+        console.error("Ошибка добавления конкурса:", err.message);
+        return res.status(500).json({ error: "Ошибка сервера" });
+      }
+
+      // Отправляем успешный ответ с данными нового конкурса
+      return res.status(201).json({
+        message: "Конкурс успешно добавлен",
+        contest: {
+          contest_id: result.insertId,
+          ...newContest,
+        },
+      });
     });
   });
 });
+
 
 
 
