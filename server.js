@@ -41,8 +41,6 @@ pool.getConnection((err, connection) => {
 });
 
 
-const fetch = require("node-fetch");
-
 
 // Эндпоинт для проверки/создания пользователя
 app.post("/check-user", (req, res) => {
