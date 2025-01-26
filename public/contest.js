@@ -42,11 +42,6 @@ methods: {
 				featured: false
 			};
 			
-			this.contests.push(newContest);
-			this.newLotTitle = '';
-			this.newLotEndDate = '';
-			this.newLotPrize = '';
-			this.newLotComment = '';
 			
 			// Получаем параметры из URL
 			const urlParams = new URLSearchParams(window.location.search);
@@ -63,6 +58,14 @@ methods: {
 			  };
 			console.log(contestData);
 			addContest(contestData);
+			
+			this.contests.push(newContest);
+			this.newLotTitle = '';
+			this.newLotEndDate = '';
+			this.newLotPrize = '';
+			this.newLotComment = '';
+			
+			
 			
 		}
 	},
