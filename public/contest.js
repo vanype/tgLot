@@ -101,8 +101,6 @@ async function addContest(contestData) {
   }
 }
 
-// Вызов функции
-addContest();
 
 
 
