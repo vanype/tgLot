@@ -102,7 +102,7 @@ app.post("/add-contest", (req, res) => {
   }
 
   // Проверяем, существует ли пользователь с таким author_id
-  pool.query("SELECT * FROM users WHERE user_id = ?", [author_id], (err, results) => {
+  pool.query("SELECT * FROM users WHERE telegram_id = ?", [author_id], (err, results) => {
     if (err) {
       console.error("Ошибка выполнения запроса:", err.message);
       return res.status(500).json({ error: "Ошибка сервера" });
