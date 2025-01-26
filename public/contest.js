@@ -55,10 +55,10 @@ methods: {
 			
 			const contestData = {
 				author_id: telegramId, // Пример ID автора
-				prize: this.newLotPrize, // Приз
-				description: this.newLotComment, // Описание конкурса
-				start_date: new Date().toISOString(), // Дата начала
-				end_date: this.newLotEndDate // Дата окончания
+				prize: "ok", // Приз
+				description: "ok", // Описание конкурса
+				start_date: "01-01-01", // Дата начала
+				end_date: "02-02-02" // Дата окончания
 			  };
 			addContest(contestData);
 			
