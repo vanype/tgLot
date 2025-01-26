@@ -36,4 +36,7 @@ async function checkUser() {
 }
 
 // Автоматический запуск функции при загрузке страницы
-window.onload = checkUser;
+document.addEventListener('DOMContentLoaded', function() 
+{
+  checkUser();
+});
