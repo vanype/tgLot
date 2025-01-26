@@ -95,9 +95,9 @@ app.post("/check-user", (req, res) => {
 
 // Эндпоинт для добавления нового конкурса
 app.post("/add-contest", (req, res) => {
-  const { contest_id, author_id, prize, description, start_date, end_date } = req.body;
+  const { author_id, prize, description, start_date, end_date } = req.body;
 
-  if (!contest_id || !author_id || !prize || !description || !start_date || !end_date) {
+  if (!author_id || !prize || !description || !start_date || !end_date) {
     return res.status(400).json({ error: "Все поля обязательны для заполнения" });
   }
 
