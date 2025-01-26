@@ -41,6 +41,7 @@ methods: {
 				comment: this.newLotComment,
 				featured: false
 			};
+			
 			this.contests.push(newContest);
 			this.newLotTitle = '';
 			this.newLotEndDate = '';
@@ -60,6 +61,7 @@ methods: {
 				start_date: new Date().toISOString().split('T')[0], // Дата начала конкурса (текущая дата)
 				end_date: this.newLotEndDate, // Дата окончания конкурса
 			  };
+			console.log(contestData);
 			addContest(contestData);
 			
 		}
