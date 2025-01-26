@@ -93,7 +93,40 @@ app.post("/check-user", (req, res) => {
   );
 });
 
+// Эндпоинт для добавления нового конкурса
+app.post("/add-contest", (req, res) => {
+  const { contest_id, author_id, prize, description, start_date, end_date } = req.body;
 
+  if (!contest_id || !author_id || !prize || !description || !start_date || !end_date) {
+    return res.status(400).json({ error: "Все поля обязательны для заполнения" });
+  }
+
+  // Создание нового конкурса
+  const newContest = {
+    author_id: author_id,
+    prize: prize,
+    description: description,
+    start_date: start_date,
+    end_date: end_date
+  };
+
+  // Вставка нового конкурса в таблицу
+  pool.query("INSERT INTO contests SET ?", newContest, (err, result) => {
+    if (err) {
+      console.error("Ошибка добавления конкурса:", err.message);
+      return res.status(500).json({ error: "Ошибка сервера" });
+    }
+
+    // Отправляем успешный ответ с данными нового конкурса
+    return res.status(201).json({
+      message: "Конкурс успешно добавлен",
+      contest: {
+        contest_id: result.insertId,
+        ...newContest,
+      },
+    });
+  });
+});
 
 
 

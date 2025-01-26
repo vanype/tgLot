@@ -2,127 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
     <title>Contests</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-	<script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            background: #e9ecef;
-            border-radius: 4px 4px 0 0;
-        }
-        .tab.active {
-            background: #007bff;
-            color: white;
-        }
-        .contest {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #f9f9f9;
-            position: relative;
-            cursor: pointer;
-        }
-        .contest.featured {
-            background: #fff4e6;
-            border-color: #ffa726;
-            box-shadow: 0 0 8px 2px rgba(255, 165, 38, 0.7);
-        }
-        .contest .price {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-weight: bold;
-            color: #ffa726;
-        }
-        .add-lot {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        .add-lot input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .add-lot button {
-            padding: 8px 16px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .add-lot button:hover {
-            background: #0056b3;
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .modal-content h3 {
-            margin: 0 0 10px;
-        }
-        .modal-content button {
-            display: block;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .modal-content button:hover {
-            background: #0056b3;
-        }
-    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
     <div id="app">
         <div class="container">
             <div class="add-lot">
                 <input v-model="newLotTitle" placeholder="Enter new contest title">
+                <input v-model="newLotEndDate" type="date" placeholder="Enter end date">
+                <input v-model="newLotPrize" placeholder="Enter contest prize">
+                <input v-model="newLotComment" placeholder="Enter contest comment">
                 <button @click="addNewLot">Add New Contest</button>
             </div>
             <div class="tabs">
@@ -148,6 +41,8 @@
                     @click="openModal(contest)">
                     <h3>{{ contest.title }}</h3>
                     <p>Created: {{ contest.created }}</p>
+                    <p v-if="contest.prize">Prize: {{ contest.prize }}</p>
+                    <p v-if="contest.comment">Comment: {{ contest.comment }}</p>
                     <div class="price" v-if="contest.featured">Featured</div>
                 </div>
             </div>
@@ -160,76 +55,27 @@
                     @click="openModal(contest)">
                     <h3>{{ contest.title }}</h3>
                     <p>Ended: {{ contest.ended }}</p>
+                    <p v-if="contest.prize">Prize: {{ contest.prize }}</p>
+                    <p v-if="contest.comment">Comment: {{ contest.comment }}</p>
                     <div class="price" v-if="contest.featured">Featured</div>
                 </div>
             </div>
 
             <div v-if="showModal" class="modal" @click.self="closeModal">
                 <div class="modal-content">
-                    <h3>{{ selectedContest.title }}</h3>
-                    <p v-if="selectedContest.created">Created: {{ selectedContest.created }}</p>
-                    <p v-if="selectedContest.ended">Ended: {{ selectedContest.ended }}</p>
-                    <p v-if="selectedContest.featured">This contest is featured!</p>
+                    <h3 v-if="selectedContest">{{ selectedContest.title }}</h3>
+                    <p v-if="selectedContest && selectedContest.created">Created: {{ selectedContest.created }}</p>
+                    <p v-if="selectedContest && selectedContest.ended">Ended: {{ selectedContest.ended }}</p>
+                    <p v-if="selectedContest && selectedContest.prize">Prize: {{ selectedContest.prize }}</p>
+                    <p v-if="selectedContest && selectedContest.comment">Comment: {{ selectedContest.comment }}</p>
+                    <p v-if="selectedContest && selectedContest.featured">This contest is featured!</p>
                     <button @click="closeModal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const app = Vue.createApp({
-            data() {
-                return {
-                    activeTab: 'new',
-                    newLotTitle: '',
-                    contests: [
-                        { id: 1, title: 'Contest 1', created: '2025-01-01', ended: null, featured: false },
-                        { id: 2, title: 'Contest 2', created: '2025-01-10', ended: '2025-01-20', featured: true },
-                        { id: 3, title: 'Contest 3', created: '2025-01-05', ended: null, featured: false },
-                    ],
-                    showModal: false,
-                    selectedContest: null
-                };
-            },
-            computed: {
-                sortedNewContests() {
-                    return this.contests
-                        .filter(contest => !contest.ended)
-                        .sort((a, b) => new Date(b.created) - new Date(a.created));
-                },
-                sortedEndedContests() {
-                    return this.contests
-                        .filter(contest => contest.ended)
-                        .sort((a, b) => new Date(b.ended) - new Date(a.ended));
-                }
-            },
-            methods: {
-                addNewLot() {
-                    if (this.newLotTitle.trim() !== '') {
-                        const newContest = {
-                            id: this.contests.length + 1,
-                            title: this.newLotTitle,
-                            created: new Date().toISOString().split('T')[0],
-                            ended: null,
-                            featured: false
-                        };
-                        this.contests.push(newContest);
-                        this.newLotTitle = '';
-                    }
-                },
-                openModal(contest) {
-                    this.selectedContest = contest;
-                    this.showModal = true;
-                },
-                closeModal() {
-                    this.showModal = false;
-                    this.selectedContest = null;
-                }
-            }
-        });
-
-        app.mount('#app');
-    </script>
-	<script src="init_user.js"></script>
+    <script src="contest.js"></script>
+    <script src="init_user.js"></script>
 </body>
 </html>
