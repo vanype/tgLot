@@ -54,11 +54,11 @@ methods: {
 			const telegramId = urlParams.get('telegramId');
 			
 			const contestData = {
-				author_id: telegramId, // Пример ID автора
-				prize: "ok", // Приз
-				description: "ok", // Описание конкурса
-				start_date: "01-01-01", // Дата начала
-				end_date: "02-02-02" // Дата окончания
+				author_id: telegramId, // ID автора конкурса (из URL)
+				prize: this.newLotPrize, // Приз конкурса
+				description: this.newLotComment, // Описание конкурса
+				start_date: new Date().toISOString().split('T')[0], // Дата начала конкурса (текущая дата)
+				end_date: this.newLotEndDate, // Дата окончания конкурса
 			  };
 			addContest(contestData);
 			
