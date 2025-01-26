@@ -47,7 +47,11 @@ methods: {
 			this.newLotPrize = '';
 			this.newLotComment = '';
 			
-			const telegramId = localStorage.getItem("telegramId");
+			// Получаем параметры из URL
+			const urlParams = new URLSearchParams(window.location.search);
+
+			// Извлекаем параметр telegramId
+			const telegramId = urlParams.get('telegramId');
 			
 			const contestData = {
 				author_id: telegramId, // Пример ID автора
