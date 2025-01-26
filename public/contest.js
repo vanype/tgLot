@@ -60,7 +60,7 @@ methods: {
 				start_date: new Date().toISOString(), // Дата начала
 				end_date: this.newLotEndDate // Дата окончания
 			  };
-			addContest(newContest);
+			addContest(contestData);
 			
 		}
 	},
