@@ -1,0 +1,17 @@
+{
+  "name": "contest-app",
+  "version": "1.0.0",
+  "description": "A simple contest application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
